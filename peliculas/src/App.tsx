@@ -5,7 +5,7 @@ import useFetch from './Hook/useFetch'
 import FilterButton from './components/FilterByKind'
 
 interface Data {
-  title:string,
+  Title:string,
   Poster:string,
   Year : string,
   Type: string
@@ -19,7 +19,10 @@ function App() {
   
   const {data,loading,error} = useFetch<Data>(`https://www.omdbapi.com/?apikey=${apiKey}&s=`,movies)
 
+  //estados
   const [lista,setLista] = useState(data)
+  const [valueInput,setValueInput] = useState("")
+
   console.log(JSON.stringify(data))
   
   useEffect(()=>{
@@ -29,32 +32,69 @@ function App() {
   },[data])
 
 
-  const filtrarPeliculas = () =>{
+  const filterMovies = () =>{
 
-    if(data){
-      setLista(data?.filter(movie => movie.Type == "movie"))
+    if(data && valueInput !=""){
+      
+      setLista(data?.filter(movie => movie.Type == "movie" && movie.Title.startsWith(valueInput)))
+    }else{
+
+      if(data){setLista(data?.filter(movie => movie.Type == "movie"))}
     }
 
   }
 
-  const filtrarSeries = () =>{
+  const filterSeries = () =>{
 
-    if(data){
-      setLista(data?.filter(movie =>movie.Type == "series"))
+    if(data && valueInput != ""){
+      console.log(valueInput)
+      setLista(data?.filter(movie =>movie.Type == "series" && movie.Title.startsWith(valueInput)))
+    }else{
+      if(data){setLista(data?.filter(movie => movie.Type == "series"))}
     }
   }
 
-  const filtrarTodo = () =>{
+  const filterAll = () =>{
 
     setLista(data)
+    setValueInput("")
   }
-  
+
+  //Esta función manejará el evento de cambio (onChange) en un <input>,es decir,actualiza el valor del input
+  // argumento event, que es el objeto de evento del navegador.
+  //indicamos que el evento proviene de un input
+  const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) =>{
+
+    setValueInput(event.target.value)//el event.target representa el elemento html que disparo el objeto
+
+    updatingByInput(event.target.value)
+
+  }
+
+  const updatingByInput = (value: string) =>{
+
+    
+
+    if( data && data?.length > 0 && value.length > 0){
+
+      setLista(data?.filter(movie => movie.Title.startsWith(value)))
+      
+    }else{
+
+      if(value == ""){
+          setLista(data)
+      }
+      
+    }
+    
+
+  }
 
   if(loading){
-    return <div>cargando...</div>
+    return <div>loading...</div>
   }
   if(error){
-    return <div>ups, hay un error:{error.message}</div>
+    return <div>ups,there's a mistake:{error.message}</div>
   }
 
   
@@ -66,11 +106,11 @@ function App() {
 
         <nav className='nav-search'>
 
-          <FilterButton parenMethod={filtrarSeries}>Series</FilterButton>
-          <FilterButton parenMethod={filtrarPeliculas}>Movies</FilterButton>
-          <FilterButton parenMethod={filtrarTodo}>Todo</FilterButton>
+          <FilterButton parenMethod={filterSeries}>Series</FilterButton>
+          <FilterButton parenMethod={filterMovies}>Movies</FilterButton>
+          <FilterButton parenMethod={filterAll}>All</FilterButton>
       
-          <input type="text" placeholder='Search your movie here' />
+          <input type="text" value={valueInput} onChange={handleInputChange} placeholder='search here' />
         </nav>
         
       </header>

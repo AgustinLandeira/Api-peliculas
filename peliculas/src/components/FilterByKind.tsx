@@ -6,7 +6,7 @@ interface Props{
 const FilterButton = ({parenMethod,children}:Props) =>{
 
     return (
-        <button onClick={parenMethod}>{children}</button>
+        <button className="buttom-filter" onClick={parenMethod}>{children}</button>
     )
 
 

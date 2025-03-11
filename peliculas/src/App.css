@@ -41,3 +41,10 @@ img{
   width: 250px;
   height: 250px;
 }
+
+.buttom-filter{
+  border: none;
+}
+.buttom-filter:hover{
+  background-color: darkred;
+}
