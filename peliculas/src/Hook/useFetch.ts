@@ -8,7 +8,7 @@ interface Props<T>{
     data : Data<T>
     loading:boolean
     error: errorState
-    
+
 }
 
 const useFetch = <T>(url:string,arrayMovies:string[]):Props<T> =>{
@@ -17,58 +17,54 @@ const useFetch = <T>(url:string,arrayMovies:string[]):Props<T> =>{
     const [loading,setLoading] = useState(false)
     const [error,setError] = useState<errorState>(null)
 
-    
+    const urlStatic: string = url
 
     useEffect(()=>{
 
+        const controller = new AbortController()
+
         const fetchData = async() =>{
+            
 
             setLoading(true)
+            let allMoviesData : T[] = []
 
-            for(const movie of arrayMovies){
+            try{
 
+                for(const movie of arrayMovies){
 
-                try{
-
-                    const response = await fetch(`${url}${movie}`)
+                    const response = await fetch(`${urlStatic}${movie}`,controller)
 
                     if(!response.ok){
-                        throw new Error("hubo un error al realizar la peticion")
+
+                        throw new Error("Error al conectarse con la api")
                     }
 
-                    const search  = await response.json()
+                    const search = await response.json()
                     const fetchData : T[] = search.Search
 
-                    
-                    setData((prevData)=>{
+                    allMoviesData = [...allMoviesData,...fetchData]
 
-                        if(prevData){
-                            return [...(prevData || []),...fetchData]
-                        }else{
-                            return fetchData
-                        }
-                    })
-                    setError(null)
                     
-
-                }catch(err)
-                {
-                    setError(err as Error)
-                    
-
-                }finally{
-                    setLoading(false)
                 }
+                setData(allMoviesData)
+                setError(null)
 
+            }catch(err){
+                setError(err as Error)
+            }finally{
+                setLoading(false)
             }
-
-            
 
         }
 
         fetchData()
 
-    },[])
+        return ()=>{
+            controller.abort()
+        }
+
+    },[url])
 
     return {data,loading,error}
 }
