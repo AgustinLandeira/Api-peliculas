@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import useFetch from './Hook/useFetch'
 import FilterButton from './components/FilterByKind'
+import MovieClick from './components/MovieClick'
 
 interface Data {
   Title:string,
@@ -15,13 +16,14 @@ interface Data {
 function App() {
 
   const apiKey = "8642e0eb"
-  const movies = ["Frozen","Superman","Flash","Justice League"]
+  const movies = ["Frozen","Superman","Flash","Justice League","Arrow","Joker","Supergirl"]
   
   const {data,loading,error} = useFetch<Data>(`https://www.omdbapi.com/?apikey=${apiKey}&s=`,movies)
 
   //estados
   const [lista,setLista] = useState(data)
   const [valueInput,setValueInput] = useState("")
+  const [movieSelected,setMovieSelected] = useState<Data | null>(null)
 
   console.log(JSON.stringify(data))
   
@@ -87,8 +89,13 @@ function App() {
       
     }
     
-
   }
+
+  const handleButtonMovie = (movieSelected: Data | null) =>{
+
+    setMovieSelected(movieSelected)
+  }
+
 
   if(loading){
     return <div>loading...</div>
@@ -111,14 +118,21 @@ function App() {
           <FilterButton parenMethod={filterAll}>All</FilterButton>
       
           <input type="text" value={valueInput} onChange={handleInputChange} placeholder='search here' />
+          <input type="Number" min="1900" max="2026" />
         </nav>
         
       </header>
+
+      <section>
         <ul>
           {lista?.map((movie)=>(
-            <li key={movie.imdbID}><img  src={movie.Poster}  /></li>
+            <li key={movie.imdbID} onClick={() => handleButtonMovie(movie)} ><img  src={movie.Poster}  /></li>
           ))}
         </ul>
+      </section>
+
+      {movieSelected && <MovieClick movieSelected={movieSelected} parenMethod={() => handleButtonMovie(null)}></MovieClick>}
+        
         
     </>
   )

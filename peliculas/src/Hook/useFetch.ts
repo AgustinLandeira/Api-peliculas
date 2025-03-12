@@ -34,6 +34,7 @@ const useFetch = <T>(url:string,arrayMovies:string[]):Props<T> =>{
                 for(const movie of arrayMovies){
 
                     const response = await fetch(`${urlStatic}${movie}`,controller)
+                    console.log(response)
 
                     if(!response.ok){
 
