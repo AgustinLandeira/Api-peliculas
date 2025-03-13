@@ -67,10 +67,6 @@ img{
   border: 2px solid red
 }
 
-
-.buttom-filter{
-  border: none;
-}
 .buttom-filter:hover{
   background-color: darkred;
 }
@@ -129,6 +125,37 @@ img{
 
   border: 2px solid red;
 
+}
+
+.page-section span{
+
+  color: white;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.page-section button{
+
+  border: none;
+  background-color: #8B0000;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease-in-out;
+  padding: 10px 15px;
+
+}
+
+.page-section button:hover{
+
+  background-color: #8b000074;
+  
+}
+
+.page-section button:disabled{
+  cursor: not-allowed;
+  background-color: gray;
 }
 
 
