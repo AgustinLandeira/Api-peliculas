@@ -33,9 +33,9 @@ function App() {
   const indexOfFirstMovie = indexOfLastMovie - moviePage//guardamos el primer indice de la peli de dicha peli
   const currentMovies = lista?.slice(indexOfFirstMovie,indexOfLastMovie)//agarramos las peliculas para dicha pagina
 
-  const totalPages = Math.ceil((lista?.length || 0) / moviePage)
+  const totalPages = Math.ceil((lista?.length || 0) / moviePage)//calculamos la cantidad de paginas necesarias para distribuir las peliculas
 
-  
+  //entra la primera vez por defecto y despues entrara cada vez que se modifique data
   useEffect(()=>{
 
     setLista(data)
@@ -45,8 +45,10 @@ function App() {
 
   const filterMovies = () =>{
 
+    //si data tiene un array con un o mas elementos y si el buscador tiene mas de un caracter entrara al primer bloque
+    // de lo contrario se le mostrara al usuario todos las peliculas de tipo movie sin tener en cuenta que dice el mostrador
     if(data && valueInput !=""){
-      
+      //esto devolvera un array con aquellos elemento que cumplan con la condicion(si el el tipo de pelicula es movie y si el titulo coincide con las palabras del input) 
       setLista(data?.filter(movie => movie.Type == "movie" && movie.Title.toLocaleLowerCase().startsWith(valueInput.toLocaleLowerCase())))
       setCurrentPage(1)
       
@@ -62,6 +64,7 @@ function App() {
 
   }
 
+  //lo mismo que con la funcion filterMovies pero en vez de movies es series
   const filterSeries = () =>{
 
     if(data && valueInput != ""){
@@ -78,9 +81,11 @@ function App() {
     }
   }
 
+  //muestra todas las peliculas tanto de movies como de series
   const filterAll = () =>{
 
     setLista(data)
+    //reiniciamos los valores
     setValueInput("")
     setCurrentPage(1)
     
